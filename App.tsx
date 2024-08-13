@@ -1,17 +1,18 @@
-import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import Routes from './src/routes/Routes';
+import AuthProvider from './src/context/AuthContext';
 
-const Stack = createStackNavigator();
 
-export default function MyStack() {
+export default function App() {
   return (
     <>
       <StatusBar style="light" />
-
       <NavigationContainer>
-       <Routes/>
-      </NavigationContainer></>
+        <AuthProvider>
+          <Routes />
+        </AuthProvider >
+      </NavigationContainer>
+    </>
   );
 }

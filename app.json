@@ -12,7 +12,8 @@
       "backgroundColor": "black"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.apppnavigator"
     },
     "android": {
       "adaptiveIcon": {

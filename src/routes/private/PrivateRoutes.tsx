@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
-import Home from '../../pages/Home';
+import Home from '../../screens/Home';
 const Stack = createStackNavigator();
 
 export default function PrivateRoutes() {

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
-import Home from '../../pages/Home';
-import Login from '../../pages/Login';
+import Home from '../../screens/Home';
+import Login from '../../screens/Login';
 const Stack = createStackNavigator();
 
 export default function PublicRoutes() {
