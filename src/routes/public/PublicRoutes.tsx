@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, View } from 'react-native'
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
 import Home from '../../screens/Home';
-import Login from '../../screens/Login';
+import SignIn from '../../screens/SignIn';
 const Stack = createStackNavigator();
 
 export default function PublicRoutes() {
@@ -14,7 +14,7 @@ export default function PublicRoutes() {
             },
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
         }}>
-            <Stack.Screen name="Home" component={Login} />
+            <Stack.Screen name="Home" options={{headerTitle:""}} component={SignIn} />
             
         </Stack.Navigator>
     )
