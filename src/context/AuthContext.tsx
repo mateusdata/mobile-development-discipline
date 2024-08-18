@@ -2,22 +2,8 @@ import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useE
 import { ActivityIndicator, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingComponent from '../components/LoadingComponent';
+import { FormatAuthContext, FormatUser } from '../interfaces';
 
-interface FormatAuthContext {
-  user: FormatUser | null
-  setUser: Dispatch<SetStateAction<FormatUser | null>>
-  loading: boolean
-  setLoading: Dispatch<SetStateAction<boolean>>
-  authenticate: boolean,
-  logOut: Function
-}
-
-interface FormatUser {
-  name: string,
-  email: string,
-  token: string
-  password?: string
-}
 
 export const AuthContext = createContext<FormatAuthContext>({} as FormatAuthContext)
 

@@ -3,17 +3,15 @@ import { View, Pressable, StyleSheet, Image, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { Controller, useForm } from 'react-hook-form';
 import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../config/Api';
-import { LinearGradient } from 'expo-linear-gradient';
-import { styleGradient } from '../style/styleGradient';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
 import LabelInput from '../components/LabelInput';
 import * as  Animatable from "react-native-animatable"
 import { AuthContext } from '../context/AuthContext';
-import { colorPrimary, colorSecundary } from '../constanst/constans';
+import { colorPrimary } from '../constants/constants';
 import ErrorMessage from '../components/ErrorMessage';
+import { Gradient } from '../components/Gradient';
+import { FormatUser } from '../interfaces';
 
 
 const SignIn = ({ navigation }: any) => {
@@ -37,51 +35,45 @@ const SignIn = ({ navigation }: any) => {
     const [loading, setLoading] = useState(false);
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            email:  "mateuspele2015@gmail.com",
+            email:  "mateus@email.com",
             password:  "123456"
         },
-        mode: "onChange",
+        mode: "onBlur",
         resolver: yupResolver(schema)
     });
 
     
 
-    const onSubmit = async (data: object) => {
-      
+    const onSubmit = async (data: FormatUser) => {
+        setUser(data)
     };
 
     return (
         <View style={styles.container}>
-            <LinearGradient
-                colors={[
-                    'hsla(205, 100%, 95%, 1)',
-                    'hsla(320, 100%, 99%, 1)',
-                    'hsla(210, 100%, 97%, 1)',
-                    'hsla(205, 100%, 95%, 1)',
-                    'hsla(313, 100%, 98%, 1)'
-                ]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styleGradient.background}
-            />
+            <Gradient/>
             <StatusBar animated hideTransitionAnimation='fade' style='light' />
 
             <Animatable.View style={styles.titleContainer}>
                 <Text style={styles.titleText}>Bem-vindo de volta</Text>
-            </Animatable.View>
+                <Animatable.Image 
+                style={styles.image}
+                resizeMode='center'
+                resizeMethod='scale'
+                 source={require("../assets/images/img1.jpeg")}
+                />
+                </Animatable.View>
 
             <View style={styles.formContainer}>
 
-                <LabelInput value='Email' />
+               {false &&  <LabelInput value='Email' />}
                 <Controller control={control}
                     render={({ field: { onChange, onBlur, value, } }) => (
                         <TextInput
                             mode="outlined"
-                            dense
-                            autoCorrect={false}
-                            outlineStyle={{ borderWidth: (watch("email") && !errors.email) ? 2 : 2 }}
-                            outlineColor={(watch("email") && !errors.email) ? colorSecundary : "gray"}
-                            activeOutlineColor={!watch("email") ? colorSecundary : !(errors?.email) ? "green" : "red"}
+                            label={"Email"}
+                            autoCorrect={false}                            
+                            outlineColor={errors?.password? "red": "gray"}                            
+                            activeOutlineColor={errors?.email? "red" : colorPrimary}
                             error={!!errors.email} 
                             onBlur={onBlur} onChangeText={onChange} value={value}
                         />
@@ -91,16 +83,15 @@ const SignIn = ({ navigation }: any) => {
 
                 <ErrorMessage name={"email"} errors={errors} mt={5} mb={2} />
 
-                <LabelInput value='Senha' />
+               {false &&  <LabelInput value='Senha' />}
                 <Controller control={control}
                     render={({ field: { onChange, onBlur, value, } }) => (
                         <TextInput
                             mode="outlined"
-                            dense
-                            autoCorrect={false}
-                            outlineStyle={{ borderWidth: (watch("password") && !errors.password) ? 2 : 2 }}
-                            outlineColor={(watch("password") && !errors.password) ? colorSecundary : "gray"}
-                            activeOutlineColor={!watch("password") ? colorSecundary : !(errors?.password) ? "green" : "red"}
+                            label={"Senha"}
+                            autoCorrect={false}                            
+                            outlineColor={errors?.password? "red": "gray"}
+                            activeOutlineColor={errors?.password? "red" : colorPrimary}
                             error={!!errors.password} 
                             onBlur={onBlur} onChangeText={onChange} value={value} secureTextEntry
                         />
@@ -124,9 +115,9 @@ const SignIn = ({ navigation }: any) => {
                     </Button>
                 </View>
                 <View style={{ width: "auto", alignItems: "center", justifyContent: "center", marginTop: 15 }}>
-                    <Text style={{  color: "gray" }}>Esqueceu sua senha ?</Text>
-                    <Pressable onPress={() => navigation.navigate("SendEmail")}>
-                        <Text style={{  color: "#407AFF" }}>Recuperar senha</Text>
+                    <Text style={{  color: "gray" }}>Não tem uma conta?</Text>
+                    <Pressable onPress={() => navigation.navigate("CreateUser")}>
+                        <Text style={{  color: "#407AFF" }}>Criar conta</Text>
                     </Pressable>
                 </View>
             </View>
@@ -136,18 +127,18 @@ const SignIn = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
     container: {
-        
         flex: 1,
         justifyContent: 'flex-start',
         padding: 2,
+        backgroundColor:"white"
     },
     titleContainer: {
-        
+        marginTop:50,
+
         justifyContent: 'center',
         alignItems: 'center',
     },
-    titleText: {
-        fontFamily: "Poppins_800ExtraBold",
+    titleText: {        
         fontSize: 25,
         marginBottom: 0,
         marginTop: 0,
@@ -187,6 +178,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 17
     },
+    image:{
+        width:50,
+        height:50,
+        borderRadius:80
+    }
 });
 
 export default SignIn;
