@@ -1,7 +1,6 @@
 import React from 'react';
 import { Image, Text, Pressable, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import { StatusBar } from 'expo-status-bar';
 import * as  Animatable from "react-native-animatable"
 import { colorPrimary, colorRed } from '../constants/constants';
 import { Gradient } from '../components/Gradient';
@@ -12,7 +11,6 @@ const PreeSigin = ({ navigation }: any) => {
 
     return (
         <View style={{ flex: 1, alignItems: "center", backgroundColor: "#F5F7FF", }}>
-            <StatusBar animated hideTransitionAnimation='fade' style='light' />
 
         
             <Animatable.Image animation={"fadeInRight"} style={{ flex: 0.5, width: "100%", top:10 }}

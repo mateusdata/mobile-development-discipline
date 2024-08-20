@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { View, Pressable, StyleSheet, Image, Text } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { Controller, useForm } from 'react-hook-form';
-import { StatusBar } from 'expo-status-bar';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
 import LabelInput from '../components/LabelInput';
@@ -51,7 +50,6 @@ const SignIn = ({ navigation }: any) => {
     return (
         <View style={styles.container}>
             <Gradient/>
-            <StatusBar animated hideTransitionAnimation='fade' style='light' />
 
             <Animatable.View style={styles.titleContainer}>
                 <Text style={styles.titleText}>Bem-vindo de volta</Text>
