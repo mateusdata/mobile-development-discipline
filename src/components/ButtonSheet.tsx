@@ -4,25 +4,25 @@ import { Sheet } from 'tamagui'
 import { ContextSheet } from '../context/BottomSheetContex'
 import HeaderSheet from './HeaderSheet'
 
-interface FormatBottonSheetProps {
+interface FormatButtonSheetProps {
     snapPoints: Array<number>;
     children: React.ReactNode
 }
-export default function BottonSheet({ snapPoints, children }: FormatBottonSheetProps) {
+export default function ButtonSheet({ snapPoints, children }: FormatButtonSheetProps) {
     const { isVisible, closeBottomSheet, openBottomSheet } = useContext(ContextSheet)
     
     useEffect(() => {
         const handleBackPress = () => {
             if (isVisible) {
                 closeBottomSheet();
-                return true; // Retorna true para indicar que o evento foi tratado
+                return true; 
             }
-            return false; // Retorna false para permitir o comportamento padrão do botão de voltar
+            return false; 
         };
 
         BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-        // Limpeza do listener
+        
         return () => {
             BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
         };
@@ -41,7 +41,7 @@ export default function BottonSheet({ snapPoints, children }: FormatBottonSheetP
         >
 
             <Sheet.Overlay />
-            <Sheet.Frame style={{ borderTopEndRadius: 15, borderTopStartRadius: 15 }}>
+            <Sheet.Frame>
                 <HeaderSheet />
                 {children}
             </Sheet.Frame>

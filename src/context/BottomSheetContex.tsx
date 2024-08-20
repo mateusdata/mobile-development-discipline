@@ -11,7 +11,7 @@ export const ContextSheet = createContext<FormatSheet>({} as FormatSheet)
 
 export default function ButtonSheetPrivider({ children }: PropsWithChildren) {
 
-    const [isVisible, setIsVisible] = useState(true);
+    const [isVisible, setIsVisible] = useState(false);
 
     const openBottomSheet = () => setIsVisible(true);
     const closeBottomSheet = () => setIsVisible(false);

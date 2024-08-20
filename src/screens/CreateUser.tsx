@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Text, View, Pressable, StyleSheet } from 'react-native';
+import { Text, View, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -60,21 +60,10 @@ const CreateUser = ({ navigation }: any) => {
     setUser(data)
 };
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
      <Gradient/>
       <View style={styles.contentContainer}>
-        <View style={{ gap: 10, marginTop: 10 }}>
-          <Text style={{
-            fontSize: 25,
-            marginBottom: 0,
-            marginTop: 0,
-            color: "#4d4d4f",
-            textAlign: "center"
-          }}>
-            Criar conta
-          </Text>
-
-        </View>
+        
         <View style={styles.inputContainer}>
 
           {false && <LabelInput value='Nome' />}
@@ -162,7 +151,7 @@ const CreateUser = ({ navigation }: any) => {
 
       </View>
 
-    </View>
+    </ScrollView>
   );
 };
 
@@ -171,7 +160,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-
+    marginTop:26,
     flex: 1,
     height: "100%",
     justifyContent: "flex-start",

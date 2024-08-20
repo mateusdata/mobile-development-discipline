@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
     },
     button: {
         
-        //git backgroundColor: '#407AFF',
         borderRadius: 5,
         padding: 5,
         marginTop: 15,

@@ -2,32 +2,40 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function Profile() {
+  const userUrl = "https://media.istockphoto.com/id/1490373886/pt/foto/natural-beauty.webp?b=1&s=170667a&w=0&k=20&c=JZOyXoFl8iPMqtOySv82u4miOI5NIJGLxryugT12VSg="
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{ uri: 'https://via.placeholder.com/150' }}
+          source={{ uri: userUrl }} 
           style={styles.profileImage}
         />
-        <Text style={styles.name}>Mateus Silva</Text>
-        <Text style={styles.username}>@mateusdev</Text>
-        <Text style={styles.bio}>
-          Desenvolvedora de sistemas | Apaixonada por tecnologia e inovação 🚀
-        </Text>
+        <Text style={styles.name}>Leila carla</Text>
+        <Text style={styles.username}>@username</Text>
       </View>
-
       <View style={styles.stats}>
-        <Text style={styles.stat}>
-          <Text style={styles.statNumber}>123</Text> Seguindo
-        </Text>
-        <Text style={styles.stat}>
-          <Text style={styles.statNumber}>456</Text> Seguidores
-        </Text>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>123</Text>
+          <Text>Postagens</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>456</Text>
+          <Text>Seguidores</Text>
+        </View>
+        <View style={styles.stat}>
+          <Text style={styles.statNumber}>789</Text>
+          <Text>Seguindo</Text>
+        </View>
       </View>
-
-      <TouchableOpacity style={styles.editProfileButton}>
-        <Text style={styles.editProfileButtonText}>Editar Perfil</Text>
-      </TouchableOpacity>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={styles.followButton}>
+          <Text style={styles.buttonText}>Seguir</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.mentionButton}>
+          <Text style={styles.buttonText}>Mencionar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -58,30 +66,38 @@ const styles = StyleSheet.create({
     color: 'gray',
     marginBottom: 8,
   },
-  bio: {
-    fontSize: 16,
-    textAlign: 'center',
-    paddingHorizontal: 16,
-  },
   stats: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginVertical: 16,
   },
   stat: {
-    fontSize: 16,
+    alignItems: 'center',
   },
   statNumber: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  editProfileButton: {
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+  },
+  followButton: {
     backgroundColor: '#1DA1F2',
     paddingVertical: 10,
+    paddingHorizontal: 20,
     borderRadius: 24,
     alignItems: 'center',
-    marginHorizontal: 40,
   },
-  editProfileButtonText: {
+  mentionButton: {
+    backgroundColor: '#34C759',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 24,
+    alignItems: 'center',
+  },
+  buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',

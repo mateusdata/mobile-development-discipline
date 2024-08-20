@@ -1,55 +1,36 @@
-import React from 'react';
+import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AntDesign } from '@expo/vector-icons'; // Importando os ícones
-import Home from '../../screens/Home';
+import FeedScreen from '../../screens/Feed';
 import Profile from '../../screens/Profile';
-import Feed from '../../screens/Feed';
+import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
+import TabNavigator from './TabNavigator';
 import { colorPrimary } from '../../constants/constants';
-
-const Tab = createBottomTabNavigator();
+import CreatePost from '../../screens/CreatePost';
+const Stack = createStackNavigator();
 
 export default function PrivateRoutes() {
-    return (
-        <Tab.Navigator
-            screenOptions={({ route }) => ({
-                headerTintColor: 'black',
-                headerStyle: {
-                    backgroundColor: 'white',
-                },
-                tabBarIcon: ({ color, size }) => {
-                    let iconName: any = "";
+  return (
+    <Stack.Navigator screenOptions={{
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerStyle:{
+            backgroundColor:"#fff2"
+        }
+    }}> 
+      <Stack.Screen name='Root' component={TabNavigator} options={{
+        headerShown:false,
+        
+      }}/>
+      <Stack.Screen name='Profile' component={Profile} options={{
+        headerTitle:"Perfil de usuario",
+        headerTitleAlign:"center"
+      }}/>
+      <Stack.Screen name='CreatePost' component={CreatePost}  options={{
+        headerTitle:"Novo post",
+        headerTitleAlign:"center"
+      }}/>
 
-                    if (route.name === 'Feed') {
-                        iconName = 'home'; // Ícone para o Feed
-                    } else if (route.name === 'Home') {
-                        iconName = 'search1'; // Ícone para Home
-                    } else if (route.name === 'Profile') {
-                        iconName = 'user'; // Ícone para o Profile
-                    }
-                    else if (route.name === 'Added') {
-                        iconName = 'plus'; // Ícone para Added
-                    }
-                    else if (route.name === 'Heart') {
-                        iconName = 'hearto'; // Ícone para Heart
-                    }
+      
 
-                    // Retorna o ícone baseado na rota atual
-                    return <AntDesign name={iconName} size={30} color={color} />; // Aumenta o tamanho dos ícones
-                },
-                tabBarShowLabel: false, // Remove os nomes das rotas e exibe só os ícones
-                tabBarActiveTintColor: colorPrimary,
-                tabBarInactiveTintColor: 'gray', // Corrigido para 'gray'
-                tabBarStyle: {
-                    height: 55, // Aumenta o tamanho da tabBar
-                    paddingBottom: 5, // Adiciona um pouco de padding na parte inferior
-                },
-            })}
-        >
-            <Tab.Screen name="Feed" component={Feed} />
-            <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Added" component={Home} />
-            <Tab.Screen name="Heart" component={Home} />
-            <Tab.Screen name="Profile" component={Profile} />
-        </Tab.Navigator>
-    );
+    </Stack.Navigator>    
+  )
 }

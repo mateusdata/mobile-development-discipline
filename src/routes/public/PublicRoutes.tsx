@@ -16,13 +16,13 @@ export default function PublicRoutes() {
                 backgroundColor: colorPrimary,
             },
             
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
 
 
             <Stack.Screen name="PreeSigin" options={{ headerTitle: "", headerShown:false }} component={PreeSigin} />
             <Stack.Screen name="SigIn" options={{ headerTitle: "", headerShown:false  }} component={SignIn} />
-            <Stack.Screen name="CreateUser" options={{ headerTitle: "" }} component={CreateUser} />
+            <Stack.Screen name="CreateUser" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />
 
 
         </Stack.Navigator>
