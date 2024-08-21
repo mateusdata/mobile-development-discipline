@@ -17,6 +17,7 @@ export default function CreatePost() {
       <TextInput
         mode="outlined"
         label="Seu post"
+        autoFocus
         value={postText}
         onChangeText={setPostText}
         multiline={true}

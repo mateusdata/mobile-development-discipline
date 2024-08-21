@@ -4,16 +4,17 @@ import { Sheet } from 'tamagui'
 import { ContextSheet } from '../context/BottomSheetContex'
 import HeaderSheet from './HeaderSheet'
 
-interface FormatButtonSheetProps {
+interface FormatBottomSheetProps {
     snapPoints: Array<number>;
-    children: React.ReactNode
+    children: React.ReactNode;
+    id: string
 }
-export default function ButtonSheet({ snapPoints, children }: FormatButtonSheetProps) {
-    const { isVisible, closeBottomSheet, openBottomSheet } = useContext(ContextSheet)
+export default function BottomSheet({ snapPoints, children, id }: FormatBottomSheetProps) {
+    const {  closeBottomSheet, visibleSheetId} = useContext(ContextSheet)
     
     useEffect(() => {
         const handleBackPress = () => {
-            if (isVisible) {
+            if (visibleSheetId) {
                 closeBottomSheet();
                 return true; 
             }
@@ -26,13 +27,13 @@ export default function ButtonSheet({ snapPoints, children }: FormatButtonSheetP
         return () => {
             BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
         };
-    }, [isVisible, closeBottomSheet]);
+    }, [visibleSheetId, closeBottomSheet, id]);
 
 
     return (
         <Sheet
             modal
-            open={isVisible}
+            open={visibleSheetId === id}
             dismissOnSnapToBottom
             animation="medium"
             native

@@ -4,14 +4,14 @@ import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import ButtonSheet from '../components/ButtonSheet';
 import { ContextSheet } from '../context/BottomSheetContex';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import HeaderFeed from '../components/HeaderFeed';
 import ButtonAddPost from '../components/ButtonAddePost';
+import BottomSheet from '../components/BottomSheet';
 
 const FeedScreen = ({ navigation }: any) => {
-  const { isVisible, closeBottomSheet, openBottomSheet } = useContext(ContextSheet)
+  const {  openBottomSheet} = useContext(ContextSheet)
   const { height, width } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
 
@@ -19,9 +19,16 @@ const FeedScreen = ({ navigation }: any) => {
 
     
     setTimeout(() => {
-      openBottomSheet()
-    }, 1000)
+      handleOpenSheet()
+    }, 3000)
   }, []);
+
+  const handleOpenSheet = () => {
+    openBottomSheet('FeedScreen');
+};
+
+
+
   const posts = Array.from({ length: 20 }, (_, index) => ({
     id: (index + 1).toString(),
     user_login: `usuário${index + 1}`,
@@ -49,7 +56,7 @@ const FeedScreen = ({ navigation }: any) => {
               </Pressable>
               <Text numberOfLines={50000} ellipsizeMode="tail" style={[styles.postUser, { fontWeight: 100 }]}>{"4h"}</Text>
             </View>
-            <SimpleLineIcons onPress={openBottomSheet} name="options" size={20} color="#c4c4c4" />
+            <SimpleLineIcons onPress={handleOpenSheet} name="options" size={20} color="#c4c4c4" />
           </View>
           <Text numberOfLines={50000} ellipsizeMode="tail" style={styles.postMessage}>{item.message}</Text>
 
@@ -99,7 +106,7 @@ const FeedScreen = ({ navigation }: any) => {
           contentContainerStyle={styles.feedList}
         />
 
-        <ButtonSheet snapPoints={[height < 700 ? 45 : 35]}>
+        <BottomSheet id="FeedScreen" snapPoints={[height < 700 ? 45 : 35]}>
           <View style={{ padding: 20, alignItems: 'center' }}>
             <>
               <Image
@@ -114,7 +121,7 @@ const FeedScreen = ({ navigation }: any) => {
               </Text>
             </>
           </View>
-        </ButtonSheet>
+        </BottomSheet>
 
 
       </View>

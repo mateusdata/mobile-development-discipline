@@ -1,16 +1,19 @@
 import { View, Text, Image, StyleSheet, Pressable, Dimensions, Alert } from 'react-native';
-import ButtonSheet from '../components/ButtonSheet';
 import { Button, TextInput } from 'react-native-paper';
 import { useContext, useState } from 'react';
 import { ContextSheet } from '../context/BottomSheetContex';
+import BottomSheet from '../components/BottomSheet';
 
 export default function Account() {
   const [name, setName] = useState('Simone Biles');
   const [username, setUsername] = useState('@simonebiles');
   const [bio, setBio] = useState('Desenvolvedora de sistemas | Apaixonada por tecnologia e inovação 🚀');
-  const { isVisible, closeBottomSheet, openBottomSheet } = useContext(ContextSheet);
+  const { closeBottomSheet, openBottomSheet } = useContext(ContextSheet);
   const { height, width } = Dimensions.get('window');
 
+  const handleOpenSheet = () => {
+    openBottomSheet('FeedScreen');
+};
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -34,11 +37,11 @@ export default function Account() {
         </Text>
       </View>
 
-      <Pressable onPress={openBottomSheet} style={styles.editProfileButton}>
+      <Pressable onPress={handleOpenSheet} style={styles.editProfileButton}>
         <Text style={styles.editProfileButtonText}>Editar Perfil</Text>
       </Pressable>
 
-      <ButtonSheet snapPoints={[height < 700 ? 48 : 38]}>
+      <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 38]}>
         <View style={styles.sheetContent}>
           <TextInput
             label="Nome"
@@ -73,7 +76,7 @@ export default function Account() {
             Salvar Alterações
           </Button>
         </View>
-      </ButtonSheet>
+      </BottomSheet>
     </View>
   );
 }

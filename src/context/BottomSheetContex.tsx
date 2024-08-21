@@ -2,22 +2,22 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useState } 
 import { View } from "react-native";
 
 interface FormatSheet {
-    isVisible: boolean
-    setIsVisible: Dispatch<SetStateAction<boolean>>
-    openBottomSheet:  () => void
+    visibleSheetId: string | null
+    setVisibleSheetId?: Dispatch<SetStateAction<string | null>>
+    openBottomSheet:  (id: string) => void
     closeBottomSheet: () => void
 }
 export const ContextSheet = createContext<FormatSheet>({} as FormatSheet)
 
-export default function ButtonSheetPrivider({ children }: PropsWithChildren) {
+export default function BottomSheetPrivider({ children }: PropsWithChildren) {
 
-    const [isVisible, setIsVisible] = useState(false);
+    const [visibleSheetId, setVisibleSheetId] = useState<string | null>(null);
 
-    const openBottomSheet = () => setIsVisible(true);
-    const closeBottomSheet = () => setIsVisible(false);
+    const openBottomSheet = (id:string) => setVisibleSheetId(id);
+    const closeBottomSheet = () => setVisibleSheetId(null);
 
     return (
-        <ContextSheet.Provider value={{ isVisible, setIsVisible, openBottomSheet, closeBottomSheet }}>
+        <ContextSheet.Provider value={{ visibleSheetId, openBottomSheet, closeBottomSheet }}>
             {children}
         </ContextSheet.Provider>
     )
