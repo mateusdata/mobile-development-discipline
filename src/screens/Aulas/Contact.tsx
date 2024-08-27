@@ -1,29 +1,42 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { useForm } from 'react-hook-form';
 import { StyleSheet, Text, View } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
-import LabelInput from '../components/LabelInput';
 
 export default function Contact({navigation}:any) {
-  const { watch, register, control } = useForm({
+  const { watch, register,handleSubmit, control } = useForm({
     defaultValues: {
       names: "",
       phone: ""
     }
   })
 
+
+  async function onSubmit(data:any) {
+    //navigation.navigate("Contacts")
+    try {
+      AsyncStorage.setItem("user", JSON.stringify(data))
+      
+    } catch (error) {
+      
+    }
+  }
+
+
+
   return (
     <View style={styles.container}>
-      <View>
-        <LabelInput value='Nome' />
+      <View>       
+        <Text>Nome</Text>
         <TextInput mode='outlined' />
       </View>
-      <View>
-        <LabelInput value='Telefone' />
+      <View>       
+        <Text>Telefone</Text>
         <TextInput mode='outlined' />
       </View>
       <Button
-        onPress={() => navigation.navigate("Contacts")}
+        onPress={handleSubmit(onSubmit)}
         mode='outlined'
         buttonColor="#407AFF"
         textColor='white'
