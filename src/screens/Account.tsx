@@ -12,7 +12,7 @@ export default function Account() {
   const { height, width } = Dimensions.get('window');
 
   const handleOpenSheet = () => {
-    openBottomSheet('FeedScreen');
+    openBottomSheet('Account');
 };
   return (
     <View style={styles.container}>
