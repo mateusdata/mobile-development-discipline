@@ -24,49 +24,65 @@ const CreateUser = ({ navigation }: any) => {
     name: yup
       .string()
       .required('Nome é obrigatório'),
-
-    email: yup
+  
+    login: yup
       .string()
       .transform(value => value.toLowerCase())
       .required('Obrigatório')
-      .max(40, 'O tamanho máximo do texto é 40 caracteres')
-      .email('Email inválido'),
-
+      .max(40, 'O tamanho máximo do texto é 40 caracteres'),
+  
     password: yup
       .string()
       .required('Obrigatório')
       .max(40, 'O tamanho máximo do texto é 40 caracteres')
       .min(5, 'Informe uma senha maior'),
+  
+    password_confirmation: yup
+      .string()
+      .oneOf([yup.ref('password'), ''], 'As senhas não são iguais')
+      .required('Confirmação de senha é obrigatória')
   }).required();
+  
 
   const { watch, reset, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
     defaultValues: {
       name: "",
       password: "",
-      email: ""
+      login: "",
+      password_confirmation: ""
     },
-    mode: "onChange",
+    mode: "onSubmit",
     resolver: yupResolver(schema)
 
   });
 
+
   const onSubmit = async (data: FormatUser) => {
-    
-    WelcomeNotification(
+
+    try {
+      const response: any = await api.post("/users");
+      console.log(response.data)
+      alert("deu certo")
+    } catch (error) {
+      console.log("error na aapi")
+      console.log(error);
+
+    }
+
+    /*WelcomeNotification(
       `🎉 Olá, ${data?.name?.split(' ')[0]}!`,
       "Você acaba de dar o primeiro passo em uma jornada incrível na Papacapim. 🚀🌟",
       1
-    );
-    setUser(data)
-};
+    );*/
+
+    ///setUser(data)
+  };
   return (
     <ScrollView style={styles.container}>
-     <Gradient/>
+      <Gradient />
       <View style={styles.contentContainer}>
-        
-        <View style={styles.inputContainer}>
 
-          {false && <LabelInput value='Nome' />}
+        <View style={styles.inputContainer}>
           <Controller control={control}
             render={({ field: { onChange, onBlur, value, } }) => (
               <TextInput
@@ -85,27 +101,23 @@ const CreateUser = ({ navigation }: any) => {
           />
 
           <ErrorMessage name={"nome"} errors={errors} />
-
-          {false && <LabelInput value='Email' />}
           <Controller control={control}
             render={({ field: { onChange, onBlur, value, } }) => (
               <TextInput
-                label={"Email"}
+                label={"login"}
                 mode="outlined"
                 activeOutlineColor={colorPrimary}
-                error={!!errors.email}
+                error={!!errors.login}
                 onBlur={onBlur}
                 onChangeText={onChange}
                 value={value}
               />
             )}
 
-            name="email"
+            name="login"
           />
+          <ErrorMessage name={"login"} errors={errors} />
 
-          <ErrorMessage name={"email"} errors={errors} />
-
-          {false && <LabelInput value='Senha' />}
           <Controller control={control} rules={
             {
               required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
@@ -125,8 +137,29 @@ const CreateUser = ({ navigation }: any) => {
             )}
             name="password"
           />
-
           <ErrorMessage name={"password"} errors={errors} />
+
+
+          <Controller control={control} rules={
+            {
+              required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
+              minLength: { value: 5, message: "Informe uma senha maior" },
+            }}
+            render={({ field: { onChange, onBlur, value, } }) => (
+              <TextInput
+                label={"Confirmar senha"}
+                mode="outlined"
+                activeOutlineColor={colorPrimary}
+                error={!!errors.password_confirmation}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry
+              />
+            )}
+            name="password_confirmation"
+          />
+          <ErrorMessage name={"password_confirmation"} errors={errors} />
 
           <Button
             disabled={loading}
@@ -137,6 +170,7 @@ const CreateUser = ({ navigation }: any) => {
             onPress={handleSubmit(onSubmit)}>
             Criar conta
           </Button>
+
           <View style={styles.footerContainer}>
             <Text style={styles.footerText}>Já tem uma conta?</Text>
             <Pressable onPress={() => navigation.navigate("SigIn")}>
@@ -160,7 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   contentContainer: {
-    marginTop:26,
+    marginTop: 26,
     flex: 1,
     height: "100%",
     justifyContent: "flex-start",
@@ -168,7 +202,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    padding: 5
+    padding: 5,
+    top:12
   },
   buttonGoogle: {
     padding: 5,

@@ -34,9 +34,6 @@ export const WelcomeNotification = async (title: string, message: string, delay:
       vibrate: [10, 2000],
       data: { example: 'data' }
     },
-    trigger: {
-      seconds:5,
-      repeats:true
-    }
+    trigger: null
   });
 };
