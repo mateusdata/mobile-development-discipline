@@ -12,7 +12,7 @@ export default function Account() {
   const { height, width } = Dimensions.get('window');
 
   const handleOpenSheet = () => {
-    openBottomSheet('FeedScreen');
+    openBottomSheet('Account');
 };
   return (
     <View style={styles.container}>
@@ -41,7 +41,7 @@ export default function Account() {
         <Text style={styles.editProfileButtonText}>Editar Perfil</Text>
       </Pressable>
 
-      <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 38]}>
+      <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 43]}>
         <View style={styles.sheetContent}>
           <TextInput
             label="Nome"
@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     marginBottom: 16,
+    height:50,
     backgroundColor: 'white',
   },
   saveButton: {
