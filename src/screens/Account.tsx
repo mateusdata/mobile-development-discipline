@@ -38,7 +38,7 @@ export default function Account() {
       </View>
 
       <Pressable onPress={handleOpenSheet} style={styles.editProfileButton}>
-        <Text style={styles.editProfileButtonText}>Editar Perfil</Text>
+        <Text style={styles.editProfileButtonText}>Editar Perssssfil</Text>
       </Pressable>
 
       <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 43]}>

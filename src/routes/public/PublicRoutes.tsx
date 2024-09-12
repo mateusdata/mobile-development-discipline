@@ -25,6 +25,10 @@ export default function PublicRoutes() {
             <Stack.Screen name="CreateUser" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />
 
 
+            <Stack.Screen name="Gato" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />
+            <Stack.Screen name="Lista" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />
+
+
         </Stack.Navigator>
     )
 }

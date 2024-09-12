@@ -1,10 +1,30 @@
-import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react'
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native'
-import { users } from '../../utils/user';
 import { Button, TextInput } from 'react-native-paper';
 
-export default function Home({ navigation }: any) {
+interface FormatUser {
+    name: string
+    phone: string
+}
+export default function ListContacts({ navigation }: any) {
+    const [users, setUsers] = useState<FormatUser[]>([]);
+    
+    useEffect(()=>{
+        async function recovereData() {
+            try {
+                const response:any = await AsyncStorage.getItem("users");
 
+                if(response !== null){
+                    setUsers(response)
+                }
+            } catch (error) {
+                
+            }
+        }
+
+        recovereData()
+    },[])
 
     return (
         <View style={styles.container}>
@@ -16,12 +36,12 @@ export default function Home({ navigation }: any) {
                             <View >
                                 <Image
                                     resizeMode='center' style={styles.image}
-                                    source={{ uri: `https://reactnative.dev/docs/assets/p_cat${ index==0 ?1:2}.png` }} />
+                                    source={{ uri: `https://reactnative.dev/docs/assets/p_cat${index == 0 ? 1 : 2}.png` }} />
                             </View>
 
                             <View>
                                 <Text style={styles.titleUser} >{item.name}</Text>
-                                <Text>{item.school}</Text>
+                                <Text>{item.phone}</Text>
                             </View>
 
                         </View>
