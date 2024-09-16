@@ -8,7 +8,7 @@ export default function Profile() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={{ uri: userUrl }} 
+          source={{ uri: userUrl }}
           style={styles.profileImage}
         />
         <Text style={styles.name}>Leila carla</Text>

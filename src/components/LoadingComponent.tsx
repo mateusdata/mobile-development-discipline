@@ -1,13 +1,15 @@
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { View } from 'react-native'
+import { ActivityIndicator } from 'react-native-paper'
+import { colorPrimary } from '../constants/constants'
 
 export default function LoadingComponent() {
     return (
         <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
             <StatusBar style="auto" />
 
-            <ActivityIndicator color={"blue"} size={50} />
+            <ActivityIndicator size={40} color={colorPrimary} />
         </View>
     )
 }

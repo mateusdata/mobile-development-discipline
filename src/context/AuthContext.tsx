@@ -1,8 +1,9 @@
 import React, { createContext, Dispatch, PropsWithChildren, SetStateAction, useEffect, useState } from 'react'
-import { ActivityIndicator, View } from 'react-native'
+import { ActivityIndicator, Text, View } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingComponent from '../components/LoadingComponent';
 import { FormatAuthContext, FormatUser } from '../interfaces';
+import { setInterceptors } from '../config/Api';
 
 
 export const AuthContext = createContext<FormatAuthContext>({} as FormatAuthContext)
@@ -11,27 +12,41 @@ export default function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<FormatUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-
   useEffect(() => {
-
-    const recoveryUser = async () => {
-      try {
-        const user: FormatUser | string | null = await AsyncStorage.getItem("user")
-        if (user !== null) {
-          setUser(JSON.parse(user));
-        }
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-      }
-    }
-
-    recoveryUser();
+    setInterceptors(setUser, logout)
   }, [user])
 
 
-  async function logOut() {
-    AsyncStorage.removeItem("user")
+  async function recovereData() {
+    try {
+
+      setLoading(true)
+      const user = await AsyncStorage.getItem("user");
+      const data = await AsyncStorage.getAllKeys()
+      if (user != null) {
+        setUser(JSON.parse(user));
+        setLoading(false);
+        return
+      }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      logout()
+
+    }
+  }
+
+
+
+  useEffect(() => {
+    recovereData()
+  }, []);
+
+
+
+  async function logout() {
+    await AsyncStorage.clear();
+    setUser(null)
   }
 
   if (loading) {
@@ -46,9 +61,11 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       setUser,
       loading,
       setLoading,
-      logOut
+      logout
     }}>
+
       {children}
+
     </AuthContext.Provider>
   )
 }
