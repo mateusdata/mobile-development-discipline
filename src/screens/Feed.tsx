@@ -1,7 +1,7 @@
 import uniqolor from 'uniqolor';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, ScrollView, Dimensions, Pressable } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, ScrollView, Dimensions, Pressable, Alert } from 'react-native';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
@@ -19,6 +19,7 @@ import dayjs from 'dayjs';
 import { colorPrimary } from '../constants/constants';
 import CommentsBottomSheet from '../components/CommentsBottomSheet';
 import LoadingComponent from '../components/LoadingComponent';
+const SOCKET_URL = 'ws://192.168.25.91:3000/posts';
 
 const FeedScreen = ({ navigation }: any) => {
   const { openBottomSheet, closeBottomSheet } = useContext(ContextSheet)
@@ -29,25 +30,70 @@ const FeedScreen = ({ navigation }: any) => {
   const [currentPost, setCurrentPost] = useState<FormatPost>({} as FormatPost)
 
 
+  const [data, setData] = useState<any>(null);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
 
   useEffect(() => {
+    const connectWebSocket = () => {
+      const newSocket = new WebSocket(SOCKET_URL);
 
-    setTimeout(() => {
-      //handleOpenSheet()
-    }, 3000)
+      newSocket.onopen = () => {
+        console.log('Conectado ao servidor WebSocket');
+        setSocket(newSocket);
+        setIsConnected(true);
+
+        // Enviar mensagem para se inscrever no evento
+        const message = JSON.stringify({ event: 'subscribe', data: 'subscribedEvent' });
+        newSocket.send(message);
+        console.log("Mensagem de inscrição enviada");
+      };
+
+      newSocket.onerror = (error) => {
+        console.error('Erro de conexão:', error);
+        setIsConnected(false);
+        setTimeout(connectWebSocket, 5000); // Tentar reconectar após 5 segundos
+      };
+
+      newSocket.onmessage = (event) => {
+        const response = JSON.parse(event.data);
+        setPosts(response);
+
+        if (response.event === 'subscribedEvent') {
+          setPosts(response);
+          console.log("Mensagem recebida");
+        }
+      };
+
+      newSocket.onclose = () => {
+        console.log('Conexão fechada');
+        setIsConnected(false);
+      };
+    };
+
+    connectWebSocket();
+
+    return () => {
+      if (socket) {
+        socket.close();
+      }
+    };
   }, []);
 
-  const handleOpenSheet = (name: string) => {
-    openBottomSheet('FeedScreen');
-
+  const sendMessage = (event: string, data: any) => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const message = JSON.stringify({ event, data });
+      socket.send(message);
+      console.log(`Mensagem enviada para o evento ${event}`);
+    } else {
+      console.error('WebSocket não está conectado');
+    }
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      getPost()
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+
+
+
+
 
   async function getPost() {
 
@@ -58,6 +104,8 @@ const FeedScreen = ({ navigation }: any) => {
       alert("OCorreu um erro ao buscar os post")
     }
   }
+
+
   async function handleLike(post: FormatPost) {
     const currentLike = post.likes.find((like) => like.userId === user?.userId);
 
