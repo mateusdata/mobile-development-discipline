@@ -12,6 +12,7 @@ import ErrorMessage from '../components/ErrorMessage';
 import { colorPrimary } from '../constants/constants';
 import { Gradient } from '../components/Gradient';
 import { FormatUser } from '../interfaces';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -24,25 +25,25 @@ const CreateUser = ({ navigation }: any) => {
     name: yup
       .string()
       .required('Nome é obrigatório'),
-  
+
     login: yup
       .string()
       .transform(value => value.toLowerCase())
       .required('Obrigatório')
       .max(40, 'O tamanho máximo do texto é 40 caracteres'),
-  
+
     password: yup
       .string()
       .required('Obrigatório')
       .max(40, 'O tamanho máximo do texto é 40 caracteres')
       .min(5, 'Informe uma senha maior'),
-  
+
     password_confirmation: yup
       .string()
       .oneOf([yup.ref('password'), ''], 'As senhas não são iguais')
       .required('Confirmação de senha é obrigatória')
   }).required();
-  
+
 
   const { watch, reset, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
     defaultValues: {
@@ -56,16 +57,61 @@ const CreateUser = ({ navigation }: any) => {
 
   });
 
+  const login = async (data: FormatUser) => {
+    const login = {
+      login: data.user?.login,
+      password: data.user?.password
+    }
+    
+    try {
+      setLoading(true)
 
+      await AsyncStorage.clear()
+      const response = await api.post("/sessions", login)
+      setUser(response.data)
+      await AsyncStorage.setItem("user", JSON.stringify(response.data))
+
+      await AsyncStorage.setItem("accessToken", response?.data?.token)
+
+      console.log(response.data);
+
+    } catch (error) {
+      console.log(error);
+      setLoading(false)
+      setError('login', {})
+      setError('name', {})
+      setError('password', {})
+      setError('password_confirmation', { message: "Ocorreu um error interno" })
+
+
+    }
+  }
   const onSubmit = async (data: FormatUser) => {
 
     try {
-      const response: any = await api.post("/users");
+      setLoading(true)
+      const user = {
+        user: {
+          login: data.login,
+          name: data.name,
+          password: data.name,
+          password_confirmation: data.name
+        }
+      }
+      console.log(user);
+
+      const response: any = await api.post("/users", user);
+      login(user)
       console.log(response.data)
-      alert("deu certo")
     } catch (error) {
       console.log("error na aapi")
       console.log(error);
+      setLoading(false)
+      setError('login', {})
+      setError('name', {})
+      setError('password', {})
+      setError('password_confirmation', { message: "Ocorreu um error interno" })
+
 
     }
 
@@ -100,7 +146,7 @@ const CreateUser = ({ navigation }: any) => {
             name="name"
           />
 
-          <ErrorMessage name={"nome"} errors={errors} />
+          <ErrorMessage name={"name"} errors={errors} />
           <Controller control={control}
             render={({ field: { onChange, onBlur, value, } }) => (
               <TextInput
@@ -203,7 +249,7 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 5,
-    top:12
+    top: 12
   },
   buttonGoogle: {
     padding: 5,

@@ -19,6 +19,7 @@ import dayjs from 'dayjs';
 import { colorPrimary } from '../constants/constants';
 import CommentsBottomSheet from '../components/CommentsBottomSheet';
 import LoadingComponent from '../components/LoadingComponent';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const SOCKET_URL = 'ws://192.168.25.91:3000/posts';
 
 const FeedScreen = ({ navigation }: any) => {
@@ -35,49 +36,11 @@ const FeedScreen = ({ navigation }: any) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
 
   useEffect(() => {
-    const connectWebSocket = () => {
-      const newSocket = new WebSocket(SOCKET_URL);
-
-      newSocket.onopen = () => {
-        console.log('Conectado ao servidor WebSocket');
-        setSocket(newSocket);
-        setIsConnected(true);
-
-        // Enviar mensagem para se inscrever no evento
-        const message = JSON.stringify({ event: 'subscribe', data: 'subscribedEvent' });
-        newSocket.send(message);
-        console.log("Mensagem de inscrição enviada");
-      };
-
-      newSocket.onerror = (error) => {
-        console.error('Erro de conexão:', error);
-        setIsConnected(false);
-        setTimeout(connectWebSocket, 5000); // Tentar reconectar após 5 segundos
-      };
-
-      newSocket.onmessage = (event) => {
-        const response = JSON.parse(event.data);
-        setPosts(response);
-
-        if (response.event === 'subscribedEvent') {
-          setPosts(response);
-          console.log("Mensagem recebida");
-        }
-      };
-
-      newSocket.onclose = () => {
-        console.log('Conexão fechada');
-        setIsConnected(false);
-      };
-    };
-
-    connectWebSocket();
-
-    return () => {
-      if (socket) {
-        socket.close();
-      }
-    };
+   async function fetchData() {
+    const data  =  await AsyncStorage.getItem("accessToken");
+    console.log(data);
+   }
+   fetchData()
   }, []);
 
   const sendMessage = (event: string, data: any) => {
