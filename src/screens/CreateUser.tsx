@@ -66,12 +66,22 @@ const CreateUser = ({ navigation }: any) => {
     try {
       setLoading(true)
 
-      await AsyncStorage.clear()
       const response = await api.post("/sessions", login)
-      setUser(response.data)
-      await AsyncStorage.setItem("user", JSON.stringify(response.data))
+     
 
-      await AsyncStorage.setItem("accessToken", response?.data?.token)
+      try {
+        setUser(response.data)
+        await AsyncStorage.setItem("user", JSON.stringify(response.data))
+      } catch (error) {
+        alert("Error1")
+      }
+
+      try {
+        await AsyncStorage.setItem("accessToken", response?.data?.token)
+      } catch (error) {
+        alert("Error2")
+      }
+   
 
 
     } catch (error) {
@@ -100,7 +110,7 @@ const CreateUser = ({ navigation }: any) => {
       console.log(user);
 
       const response: any = await api.post("/users", user);
-      login(user)
+      await login(user)
       console.log(response.data)
     } catch (error:any) {
       console.log("error na aapi")

@@ -23,7 +23,6 @@ const SignIn = ({ navigation }: any) => {
     const schema = yup.object({
         login: yup
             .string()
-            .transform(value => value.toLowerCase())
             .required('Obrigatório')
             .max(40, 'O tamanho máximo do texto é 40 caracteres'),
 
@@ -32,13 +31,13 @@ const SignIn = ({ navigation }: any) => {
             .string()
             .required('Obrigatório')
             .max(40, 'O tamanho máximo do texto é 40 caracteres')
-            .min(5, 'Informe uma senha maior'),
+            .min(0, 'Informe uma senha maior'),
     }).required();
 
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            login: "teuteu",
-            password: "123456"
+            login: "joaoluca",
+            password: "joaoluca"
         },
         mode: "onBlur",
         resolver: yupResolver(schema)

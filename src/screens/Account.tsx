@@ -20,7 +20,7 @@ export default function Account() {
 
   const deleteAccount = async () => {
     try {
-      await api.delete(`/users/1`); // Substitua '1' pelo ID do usuário atual
+     // await api.delete(`/users/1`); // Substitua '1' pelo ID do usuário atual
       Alert.alert("Conta", "Conta deletada com sucesso");
       logout();
     } catch (error) {
