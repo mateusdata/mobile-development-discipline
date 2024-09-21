@@ -65,6 +65,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     }}>
 
       {children}
+      <Text selectable >{JSON.stringify(user, null, 2)}</Text>
 
     </AuthContext.Provider>
   )

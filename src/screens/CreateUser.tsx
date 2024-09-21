@@ -73,7 +73,6 @@ const CreateUser = ({ navigation }: any) => {
 
       await AsyncStorage.setItem("accessToken", response?.data?.token)
 
-      console.log(response.data);
 
     } catch (error) {
       console.log(error);
@@ -103,7 +102,7 @@ const CreateUser = ({ navigation }: any) => {
       const response: any = await api.post("/users", user);
       login(user)
       console.log(response.data)
-    } catch (error) {
+    } catch (error:any) {
       console.log("error na aapi")
       console.log(error);
       setLoading(false)
@@ -111,6 +110,12 @@ const CreateUser = ({ navigation }: any) => {
       setError('name', {})
       setError('password', {})
       setError('password_confirmation', { message: "Ocorreu um error interno" })
+      if(error.response.status===422){
+        setError('password_confirmation', { message: "Usuario já existe" })
+      }
+      else if(!error.response){
+        setError('password_confirmation', { message: "Sem conexão com internet" })
+      }
 
 
     }

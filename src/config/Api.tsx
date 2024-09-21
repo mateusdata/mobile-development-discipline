@@ -6,8 +6,9 @@ const api = axios.create({
     //baseURL: "https://api.mateusdata.com.br",
     baseURL: "https://api.papacapim.just.pro.br",
     headers: {
-        "x-session-token": "b3268610-cb66-4061-b721-9d121568477a"
+        "x-session-token": "f1fde4c6-33e4-4f2f-bffc-3406c0f033c3"
     }
+
 });
 
 let isSessionExpiredToastShown = false; // Variável para controlar se o toast já foi mostrado
@@ -18,12 +19,9 @@ api.interceptors.request.use(async (config) => {
     try {
         const accessToken = await AsyncStorage.getItem("accessToken");
         if (accessToken !== null) {
-            const token = accessToken;
+            config.headers["x-session-token"] = `${accessToken}`;
+            // console.log(config.headers["x-session-token"] = `f1fde4c6-33e4-4f2f-bffc-3406c0f033c3`);
 
-            if (token) {
-
-                config.headers.Authorization = `Bearer ${token}`;
-            }
         }
         return config;
     } catch (error) {
@@ -47,7 +45,7 @@ async function setInterceptors(setUser: Function, logOut: any) {
 
             if (error.response && error.response.status === 401) {
                 try {
-                    Alert.alert("error", `Sessão expirada faça login novamente${error.response.status}`)
+                    // Alert.alert("error", `Sessão expirada faça login novamente${error.response.status}`)
                     await logOut();
                 } catch (asyncStorageError) {
                     console.error("Error removing user from AsyncStorage:", asyncStorageError);

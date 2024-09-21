@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { ContextSheet } from '../context/BottomSheetContex';
 import BottomSheet from '../components/BottomSheet';
 import { AuthContext } from '../context/AuthContext';
+import { api } from '../config/Api';
 
 export default function Account() {
   const [name, setName] = useState('Simone Biles');
@@ -11,11 +12,23 @@ export default function Account() {
   const [bio, setBio] = useState('Desenvolvedora de sistemas | Apaixonada por tecnologia e inovação 🚀');
   const { closeBottomSheet, openBottomSheet } = useContext(ContextSheet);
   const { height, width } = Dimensions.get('window');
-  const { logout } = useContext(AuthContext)
+  const { logout } = useContext(AuthContext);
 
   const handleOpenSheet = () => {
     openBottomSheet('Account');
   };
+
+  const deleteAccount = async () => {
+    try {
+      await api.delete(`/users/1`); // Substitua '1' pelo ID do usuário atual
+      Alert.alert("Conta", "Conta deletada com sucesso");
+      logout();
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao deletar conta");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -43,12 +56,13 @@ export default function Account() {
         <Text style={styles.editProfileButtonText}>Editar Perfil</Text>
       </Pressable>
 
-
-
-      <Pressable onPress={logout} style={[styles.editProfileButton, { backgroundColor: "#f46464", top: 10 }]}>
+      <Pressable onPress={logout} style={[styles.editProfileButton, { backgroundColor: "orange", marginTop: 10 }]}>
         <Text style={styles.editProfileButtonText}>Sair</Text>
       </Pressable>
 
+      <Pressable onPress={deleteAccount} style={[styles.editProfileButton, { backgroundColor: "#f46464", marginTop: 10 }]}>
+        <Text style={styles.editProfileButtonText}>Deletar Conta</Text>
+      </Pressable>
 
       <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 43]}>
         <View style={styles.sheetContent}>
@@ -76,8 +90,8 @@ export default function Account() {
           <Button
             mode="contained"
             onPress={() => {
-              Alert.alert("Perfil", "Perfil atualizado")
-              closeBottomSheet()
+              Alert.alert("Perfil", "Perfil atualizado");
+              closeBottomSheet();
             }}
             style={styles.saveButton}
             labelStyle={styles.saveButtonText}

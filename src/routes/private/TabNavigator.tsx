@@ -7,6 +7,8 @@ import Feed from '../../screens/Feed';
 import { colorPrimary } from '../../constants/constants';
 import Account from '../../screens/Account';
 import { StatusBar } from 'expo-status-bar';
+import SeachUsers from '../../screens/SeachUsers';
+import { Text, View } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +38,9 @@ export default function TabNavigator() {
             else if (route.name === 'Heart') {
               iconName = 'hearto';
             }
+            else if (route.name === 'Seach') {
+              iconName = 'search1';
+            }
 
 
             return <AntDesign name={iconName} size={30} color={color} />;
@@ -47,14 +52,22 @@ export default function TabNavigator() {
         })}
       >
         <Tab.Screen name="Feed" component={Feed} options={{ headerShown: false }} />
+        <Tab.Screen name="Seach" component={SeachUsers} options={{ 
+          headerShown: true, 
+          headerStyle:{
+            backgroundColor:"white"
+          }, 
+         
+          }} />
 
         <Tab.Screen name="Account" component={Account} options={{
           headerStyle: {
             backgroundColor: "#fff2",
           },
           headerTitle: "Minha conta",
-          headerTitleAlign: "center"
+          headerTitleAlign: "center",
         }} />
+
 
 
       </Tab.Navigator>

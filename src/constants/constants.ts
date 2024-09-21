@@ -1,3 +1,3 @@
 export const colorSecundary  = "#fff"
-export const colorPrimary  = "#407AFF"
+export const colorPrimary  = "black"
 export const colorRed  = "#FF3B30"

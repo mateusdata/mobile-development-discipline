@@ -1,7 +1,7 @@
 import uniqolor from 'uniqolor';
 
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image, ScrollView, Dimensions, Pressable, Alert } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, ScrollView, Dimensions, Pressable, Alert, Share } from 'react-native';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
@@ -14,17 +14,16 @@ import BottomSheet from '../components/BottomSheet';
 import { ActivityIndicator, Avatar, Button, IconButton } from 'react-native-paper';
 import { api } from '../config/Api';
 import { AuthContext } from '../context/AuthContext';
-import { FormatComment, FormatLike, FormatPost } from '../interfaces';
+import { FormatPost } from '../interfaces';
 import dayjs from 'dayjs';
 import { colorPrimary } from '../constants/constants';
 import CommentsBottomSheet from '../components/CommentsBottomSheet';
 import LoadingComponent from '../components/LoadingComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const SOCKET_URL = 'ws://192.168.25.91:3000/posts';
 
 const FeedScreen = ({ navigation }: any) => {
-  const { openBottomSheet, closeBottomSheet } = useContext(ContextSheet)
-  const { height, width } = Dimensions.get('window');
+  const { openBottomSheet } = useContext(ContextSheet)
+  const { height } = Dimensions.get('window');
   const insets = useSafeAreaInsets();
   const { user } = useContext(AuthContext)
   const [posts, setPosts] = useState<FormatPost[]>([])
@@ -33,99 +32,56 @@ const FeedScreen = ({ navigation }: any) => {
 
   const [data, setData] = useState<any>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-   async function fetchData() {
-    const data  =  await AsyncStorage.getItem("accessToken");
-    console.log(data);
-   }
-   fetchData()
+    async function fetchData() {
+      try {
+        setTimeout(async () => {
+          const response = await api.get("/posts");
+          console.log(response.data);
+          setPosts(response.data)
+          setLoading(false)
+
+        }, 50);
+      } catch (error) {
+        alert("Erro ao buscar as postagens")
+        setLoading(false)
+      }
+    }
+    fetchData()
   }, []);
 
-  const sendMessage = (event: string, data: any) => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const message = JSON.stringify({ event, data });
-      socket.send(message);
-      console.log(`Mensagem enviada para o evento ${event}`);
-    } else {
-      console.error('WebSocket não está conectado');
-    }
-  };
 
+  async function handleLike(item: any) {
 
-
-
-
-
-  async function getPost() {
-
-    try {
-      const response = await api.get("/posts");
-      setPosts(response.data)
-    } catch (error) {
-      alert("OCorreu um erro ao buscar os post")
-    }
   }
-
-
-  async function handleLike(post: FormatPost) {
-    const currentLike = post.likes.find((like) => like.userId === user?.userId);
-
-    const data = {
-      postId: post.postId,
-      userId: user?.userId,
-    };
-
-    setPosts((prevPosts: any) =>
-      prevPosts.map((p: any) =>
-        p.postId === post.postId
-          ? {
-            ...p,
-            likes: currentLike
-              ? p.likes.filter((like: any) => like.userId !== user?.userId)
-              : [...p.likes, { postLikeId: Date.now(), ...data }],
-            _count: {
-              ...p._count,
-              likes: currentLike ? p._count.likes - 1 : p._count.likes + 1,
-            },
-          }
-          : p
-      )
-    );
-
-    if (currentLike) {
-      if (currentLike.userId === user?.userId) {
-        try {
-          await api.delete(`postlike/${currentLike.postLikeId}`);
-        } catch (error) {
-          console.error("Erro ao remover curtida:", error);
-        }
-      }
-    } else {
-      try {
-        await api.post("postlike", data);
-      } catch (error) {
-        console.error("Erro ao curtir o post:", error);
-      }
-    }
-  }
-
 
 
 
 
   function openCommentsBottomSheet(post: FormatPost) {
-
-    setCurrentPost(post);
+    return
+    /*setCurrentPost(post);
     if (!!post.comments.length) {
       openBottomSheet('CommentsBottomSheet');
       return
+    }*/
+  }
+
+  async function sharePost(post: FormatPost) {
+    try {
+      await Share.share({
+        title: `Olá estou compartilhando um post de ${post?.user_login}`,
+        message: post.message,
+      });
+      alert(JSON.stringify(post))
+    } catch (error) {
+
     }
   }
 
-
-  if (!posts) {
+  if (loading) {
     return <LoadingComponent />
   }
   const userUrl = "https://media.istockphoto.com/id/1490373886/pt/foto/natural-beauty.webp?b=1&s=170667a&w=0&k=20&c=JZOyXoFl8iPMqtOySv82u4miOI5NIJGLxryugT12VSg="
@@ -133,7 +89,6 @@ const FeedScreen = ({ navigation }: any) => {
   const renderPost = ({ item, index }: { item: FormatPost, index: any }) => (
     <View key={index} style={styles.postContainer}>
       <View style={{ width: "90%", flexDirection: "row" }}>
-
         <Pressable onPress={() => navigation.navigate("Profile")} style={styles.containerAvatar}>
           {false && <Image
             style={styles.avatar}
@@ -143,7 +98,7 @@ const FeedScreen = ({ navigation }: any) => {
             color='white'
             style={{ backgroundColor: uniqolor.random().color }}
             size={40}
-            label={item.user.name[0]?.toUpperCase()}
+            label={item.user_login[0]?.toUpperCase()}
           />
 
         </Pressable>
@@ -153,10 +108,10 @@ const FeedScreen = ({ navigation }: any) => {
           <View style={styles.containerUserTitle}>
             <View style={{ flexDirection: "row", gap: 4, justifyContent: 'center', alignItems: "center" }}>
               <Pressable onPress={() => navigation.navigate("Profile")}>
-                <Text numberOfLines={50000} ellipsizeMode="tail" style={styles.postUser}>{item.user.name}</Text>
+                <Text numberOfLines={50000} ellipsizeMode="tail" style={styles.postUser}>{item.user_login}</Text>
               </Pressable>
               <Text numberOfLines={50000} ellipsizeMode="tail" style={[styles.postUser, { fontWeight: 100, fontSize: 12 }]}>
-                {dayjs(item.updatedAt).format("hh:mm")}
+                {dayjs(item.updated_at).format("hh:mm")}
               </Text>
             </View>
             <Pressable onPress={() => { { } }} android_ripple={{ color: colorPrimary, borderless: true }}>
@@ -169,23 +124,23 @@ const FeedScreen = ({ navigation }: any) => {
 
             <Pressable onPress={() => handleLike(item)} style={{ flexDirection: "row", alignItems: "center", }}>
 
-              {item.likes.find((item: FormatLike) => item.userId === user?.userId) ?
+              {false ?
                 <IconButton icon="heart" iconColor='red' size={22} /> :
                 <IconButton icon="heart-outline" size={22} />
               }
 
-              <Text>{item._count.likes}</Text>
+              <Text>{""}</Text>
             </Pressable>
 
             <Pressable onPress={() => openCommentsBottomSheet(item)} style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
               <AntDesign name="message1" size={22} color="black" />
-              <Text>{item._count.comments} </Text>
+              <Text>{""} </Text>
             </Pressable>
 
-            {false && <Pressable style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", gap: 3 }}>
-              <Feather name="send" size={12} color="black" />
-              <Text>{1000} </Text>
-            </Pressable>}
+
+            <Pressable onPress={() => sharePost(item)} style={{ flexDirection: "row", alignItems: "center", gap: 12, right: 20 }}>
+              <IconButton icon="share" size={22} />
+            </Pressable>
           </View>
         </View>
 
@@ -208,7 +163,7 @@ const FeedScreen = ({ navigation }: any) => {
           ListHeaderComponent={<HeaderFeed />}
           data={posts}
           renderItem={renderPost}
-          keyExtractor={(item) => item.postId.toString()}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.feedList}
         />
 

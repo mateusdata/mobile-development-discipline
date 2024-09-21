@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image, Text, Pressable, View, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
 import * as  Animatable from "react-native-animatable"
 import { colorPrimary, colorRed } from '../constants/constants';
 import { Gradient } from '../components/Gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const PreeSigin = ({ navigation }: any) => {
 //    const { closeBottomSheet, openBottomSheet  } = useContext(ContextSheet)
 
+
+useEffect(()=>{
+    async function remove() {
+        try {
+            await AsyncStorage.clear()
+
+        } catch (error) {
+            alert("Error desconhecido")
+        }
+    }
+   // remove()
+})
     return (
         <View style={{ flex: 1, alignItems: "center", backgroundColor: "#F5F7FF", }}>
 

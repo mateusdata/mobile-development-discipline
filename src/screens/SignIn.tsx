@@ -17,14 +17,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignIn = ({ navigation }: any) => {
     const { setUser, user } = useContext(AuthContext);
+    const [loading, setLoading] = useState<boolean>(false)
+
 
     const schema = yup.object({
-        email: yup
+        login: yup
             .string()
             .transform(value => value.toLowerCase())
             .required('Obrigatório')
-            .max(40, 'O tamanho máximo do texto é 40 caracteres')
-            .email("Email inválido"),
+            .max(40, 'O tamanho máximo do texto é 40 caracteres'),
+
 
         password: yup
             .string()
@@ -33,10 +35,9 @@ const SignIn = ({ navigation }: any) => {
             .min(5, 'Informe uma senha maior'),
     }).required();
 
-    const [loading, setLoading] = useState(false);
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            email: "mateus@gmail.com",
+            login: "teuteu",
             password: "123456"
         },
         mode: "onBlur",
@@ -46,20 +47,21 @@ const SignIn = ({ navigation }: any) => {
 
 
     const onSubmit = async (data: FormatUser) => {
+
         try {
-            await AsyncStorage.clear()
-            const response = await api.post("/login", data)
+            setLoading(true)
+            const response = await api.post("/sessions", data)
             setUser(response.data)
-
             await AsyncStorage.setItem("user", JSON.stringify(response.data))
-
             await AsyncStorage.setItem("accessToken", response?.data?.token)
-
+            setLoading(false)
             console.log(response.data);
 
         } catch (error) {
             console.log(error);
-
+            setLoading(false)
+            setError('login', {})
+            setError('password', {message:"Ocorreu um error interno"})
         }
     };
 
@@ -79,23 +81,23 @@ const SignIn = ({ navigation }: any) => {
 
             <View style={styles.formContainer}>
 
-                {false && <LabelInput value='Email' />}
+                {false && <LabelInput value='login' />}
                 <Controller control={control}
                     render={({ field: { onChange, onBlur, value, } }) => (
                         <TextInput
                             mode="outlined"
-                            label={"Email"}
+                            label={"login"}
                             autoCorrect={false}
                             outlineColor={errors?.password ? "red" : "gray"}
-                            activeOutlineColor={errors?.email ? "red" : colorPrimary}
-                            error={!!errors.email}
+                            activeOutlineColor={errors?.login ? "red" : colorPrimary}
+                            error={!!errors.login}
                             onBlur={onBlur} onChangeText={onChange} value={value}
                         />
                     )}
-                    name="email"
+                    name="login"
                 />
 
-                <ErrorMessage name={"email"} errors={errors} mt={5} mb={2} />
+                <ErrorMessage name={"login"} errors={errors} mt={5} mb={2} />
 
                 {false && <LabelInput value='Senha' />}
                 <Controller control={control}
