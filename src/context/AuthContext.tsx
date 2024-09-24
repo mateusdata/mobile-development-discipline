@@ -11,6 +11,8 @@ export const AuthContext = createContext<FormatAuthContext>({} as FormatAuthCont
 export default function AuthProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<FormatUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [welcome, setWelcome] = useState<boolean>(false);
+
 
   useEffect(() => {
     setInterceptors(setUser, logout)
@@ -61,7 +63,9 @@ export default function AuthProvider({ children }: PropsWithChildren) {
       setUser,
       loading,
       setLoading,
-      logout
+      logout,
+      welcome, 
+      setWelcome
     }}>
 
       {children}

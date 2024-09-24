@@ -36,7 +36,7 @@ const SignIn = ({ navigation }: any) => {
 
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            login: "mateus50",
+            login: "mateu",
             password: "123456"
         },
         mode: "onBlur",
@@ -48,7 +48,7 @@ const SignIn = ({ navigation }: any) => {
     const onSubmit = async (data: FormatUser) => {
 
         try {
-            //setLoading(true)
+            setLoading(true)
             const response = await api.post("/sessions", data)
             await AsyncStorage.setItem("accessToken", response?.data?.token)
             const userName = await api.get(`/users/${response.data?.user_login}`)

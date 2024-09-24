@@ -6,6 +6,10 @@ export interface FormatAuthContext {
     setUser: Dispatch<SetStateAction<FormatUser | null>>
     loading: boolean
     setLoading: Dispatch<SetStateAction<boolean>>
+
+
+    welcome: boolean
+    setWelcome:  Dispatch<SetStateAction<boolean>>
     authenticate: boolean,
     logout: () => void
 }
@@ -18,7 +22,7 @@ export interface FormatUser {
     password?: string
     id?: number
     user_id?: number
-    login?:string
+    login?: string
     user?: {
         name?: string,
         email?: string,
@@ -26,9 +30,9 @@ export interface FormatUser {
         token?: string
         password?: string
         user_id?: number
-        login?:string
+        login?: string
 
-        
+
     }
 }
 
@@ -39,4 +43,4 @@ export interface FormatPost {
     post_id: number | null;
     updated_at: string;
     user_login: string;
-  }
+}

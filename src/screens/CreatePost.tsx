@@ -1,14 +1,31 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ToastAndroid } from 'react-native';
 import { TextInput, Button, Text, useTheme } from 'react-native-paper';
+import axios from 'axios';
 import { colorPrimary } from '../constants/constants';
+import { api } from '../config/Api';
+import { playSound } from '../utils/playSound';
 
 export default function CreatePost() {
   const [postText, setPostText] = useState('');
   const theme = useTheme();
 
-  const handlePost = () => {
-    Alert.alert('Novo post', "Post criado com sucesso!");
+  const handlePost = async () => {
+    try {
+      const response = await api.post('/posts', {
+        post: {
+          message: postText
+        }
+      });
+
+      if (response.status === 201) {
+        ToastAndroid.show('Post criado com sucesso!', 2000);
+        setPostText("")
+        playSound()
+      }
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível criar o post.');
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import { Button, TextInput } from 'react-native-paper';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup"
-import { WelcomeNotification } from '../../utils/WelcomeNotification';
+import { WelcomeNotification } from '../utils/WelcomeNotification';
 import { AuthContext } from '../context/AuthContext';
 import { api } from '../config/Api';
 import LabelInput from '../components/LabelInput';
@@ -19,7 +19,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const CreateUser = ({ navigation }: any) => {
 
-  const { setUser } = useContext(AuthContext);
+  const { setUser, setWelcome, welcome } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
 
   const schema = yup.object({
@@ -59,31 +59,25 @@ const CreateUser = ({ navigation }: any) => {
   });
 
   const login = async (data: FormatUser) => {
+    setWelcome(true)
+    
     const login = {
       login: data.user?.login,
       password: data.user?.password
     }
 
     try {
+
       setLoading(true)
-
       const response = await api.post("/sessions", login)
+      await AsyncStorage.setItem("accessToken", response?.data?.token)
+      const userName = await api.get(`/users/${response.data?.user_login}`)
 
-
-      try {
-        setUser(response.data)
-        await AsyncStorage.setItem("user", JSON.stringify(response.data))
-      } catch (error) {
-        alert("Error1")
-      }
-
-      try {
-        await AsyncStorage.setItem("accessToken", response?.data?.token)
-      } catch (error) {
-        alert("Error2")
-      }
-
-
+      const userData = {
+        ...response.data,
+        name: userName.data.name
+      };
+      setUser(userData)
 
     } catch (error) {
       console.log(error);
@@ -104,15 +98,14 @@ const CreateUser = ({ navigation }: any) => {
         user: {
           login: data.login,
           name: data.name,
-          password: data.name,
-          password_confirmation: data.name
+          password: data.password,
+          password_confirmation: data.password
         }
       }
-      console.log(user);
 
       const response: any = await api.post("/users", user);
       await login(user)
-      console.log(response.data)
+
     } catch (error: any) {
       console.log("error na aapi")
       console.log(error);
@@ -142,7 +135,7 @@ const CreateUser = ({ navigation }: any) => {
   return (
 
     <View style={styles.container}>
-      <StatusBar  style='light'/>
+      <StatusBar style='light' />
       <Gradient />
       <ScrollView style={styles.containerScrow}>
         <View style={styles.contentContainer}>

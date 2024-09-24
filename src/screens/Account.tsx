@@ -44,7 +44,12 @@ export default function Account() {
       setTimeout(() => {
         ToastAndroid.show("Conta atualizada com sucesso", 3000)
       }, 1000);
+
+      setUser((preValues)=> ({...preValues, name: response.data.name, user_login: response.data.login}));
+
       setUser(response.data)
+
+
       await AsyncStorage.setItem("user", JSON.stringify(response.data))
       closeBottomSheet();
     } catch (error) {
@@ -63,13 +68,13 @@ export default function Account() {
           label={user?.name ? user?.name[0] : ""}
         />
         <Text style={styles.name}>{user?.name}</Text>
-        <Text style={styles.username}>@{user?.login}</Text>
+        <Text style={styles.username}>@{user?.user_login ? user?.user_login : user?.login}</Text>
 
       </View>
 
       <View style={styles.stats}>
         <Text style={styles.stat}>
-          <Text style={styles.statNumber}>123</Text> Seguindo
+          <Text  style={styles.statNumber}>123</Text> Seguindo
         </Text>
         <Text style={styles.stat}>
           <Text style={styles.statNumber}>456</Text> Seguidores
@@ -88,7 +93,7 @@ export default function Account() {
         <Text style={styles.editProfileButtonText}>Deletar Conta</Text>
       </Pressable>
 
-      <BottomSheet id='Account' snapPoints={[height < 700 ? 48 : 43]}>
+      <BottomSheet id='Account' snapPoints={[80,50]}>
         <View style={styles.sheetContent}>
           <TextInput
             label="Nome"
@@ -146,6 +151,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 4,
+    textAlign:"center"
   },
   username: {
     fontSize: 16,
