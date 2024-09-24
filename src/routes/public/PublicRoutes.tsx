@@ -22,7 +22,7 @@ export default function PublicRoutes() {
 
             <Stack.Screen name="PreeSigin" options={{ headerTitle: "", headerShown:false }} component={PreeSigin} />
             <Stack.Screen name="SigIn" options={{ headerTitle: "", headerShown:false  }} component={SignIn} />
-            <Stack.Screen name="CreateUser" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />
+            <Stack.Screen name="CreateUser" options={{ headerTitle: "Criar conta", headerTitleAlign:"center", headerStyle:{backgroundColor:colorPrimary} }} component={CreateUser} />
 
 
             <Stack.Screen name="Gato" options={{ headerTitle: "Criar conta", headerTitleAlign:"center" }} component={CreateUser} />

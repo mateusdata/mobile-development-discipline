@@ -5,9 +5,7 @@ import { Alert } from 'react-native';
 const api = axios.create({
     //baseURL: "https://api.mateusdata.com.br",
     baseURL: "https://api.papacapim.just.pro.br",
-    headers: {
-        "x-session-token": "f1fde4c6-33e4-4f2f-bffc-3406c0f033c3"
-    }
+   
 
 });
 

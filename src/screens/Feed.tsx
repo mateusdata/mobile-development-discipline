@@ -39,7 +39,7 @@ const FeedScreen = ({ navigation }: any) => {
       try {
         setTimeout(async () => {
           const response = await api.get("/posts");
-          console.log(response.data);
+        //  console.log(response.data);
           setPosts(response.data)
           setLoading(false)
 
@@ -97,7 +97,7 @@ const FeedScreen = ({ navigation }: any) => {
           <Avatar.Text
             color='white'
             style={{ backgroundColor: uniqolor.random().color }}
-            size={40}
+            size={35}
             label={item.user_login[0]?.toUpperCase()}
           />
 

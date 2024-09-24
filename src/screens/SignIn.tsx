@@ -36,8 +36,8 @@ const SignIn = ({ navigation }: any) => {
 
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            login: "joaoluca",
-            password: "joaoluca"
+            login: "mateus50",
+            password: "123456"
         },
         mode: "onBlur",
         resolver: yupResolver(schema)
@@ -48,19 +48,27 @@ const SignIn = ({ navigation }: any) => {
     const onSubmit = async (data: FormatUser) => {
 
         try {
-            setLoading(true)
+            //setLoading(true)
             const response = await api.post("/sessions", data)
-            setUser(response.data)
-            await AsyncStorage.setItem("user", JSON.stringify(response.data))
             await AsyncStorage.setItem("accessToken", response?.data?.token)
+            const userName = await api.get(`/users/${response.data?.user_login}`)
+
+            const userData = {
+                ...response.data,
+                name: userName.data.name
+            };
+
+
+            setUser(userData)
+            await AsyncStorage.setItem("user", JSON.stringify(userData))
             setLoading(false)
-            console.log(response.data);
+            console.log(userData);
 
         } catch (error) {
             console.log(error);
             setLoading(false)
             setError('login', {})
-            setError('password', {message:"Ocorreu um error interno"})
+            setError('password', { message: "Ocorreu um error interno" })
         }
     };
 

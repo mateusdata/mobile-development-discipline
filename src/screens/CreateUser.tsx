@@ -13,6 +13,7 @@ import { colorPrimary } from '../constants/constants';
 import { Gradient } from '../components/Gradient';
 import { FormatUser } from '../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { StatusBar } from 'expo-status-bar';
 
 
 
@@ -62,12 +63,12 @@ const CreateUser = ({ navigation }: any) => {
       login: data.user?.login,
       password: data.user?.password
     }
-    
+
     try {
       setLoading(true)
 
       const response = await api.post("/sessions", login)
-     
+
 
       try {
         setUser(response.data)
@@ -81,7 +82,7 @@ const CreateUser = ({ navigation }: any) => {
       } catch (error) {
         alert("Error2")
       }
-   
+
 
 
     } catch (error) {
@@ -112,7 +113,7 @@ const CreateUser = ({ navigation }: any) => {
       const response: any = await api.post("/users", user);
       await login(user)
       console.log(response.data)
-    } catch (error:any) {
+    } catch (error: any) {
       console.log("error na aapi")
       console.log(error);
       setLoading(false)
@@ -120,10 +121,10 @@ const CreateUser = ({ navigation }: any) => {
       setError('name', {})
       setError('password', {})
       setError('password_confirmation', { message: "Ocorreu um error interno" })
-      if(error.response.status===422){
+      if (error.response.status === 422) {
         setError('password_confirmation', { message: "Usuario já existe" })
       }
-      else if(!error.response){
+      else if (!error.response) {
         setError('password_confirmation', { message: "Sem conexão com internet" })
       }
 
@@ -139,120 +140,126 @@ const CreateUser = ({ navigation }: any) => {
     ///setUser(data)
   };
   return (
-    <ScrollView style={styles.container}>
+
+    <View style={styles.container}>
+      <StatusBar  style='light'/>
       <Gradient />
-      <View style={styles.contentContainer}>
+      <ScrollView style={styles.containerScrow}>
+        <View style={styles.contentContainer}>
 
-        <View style={styles.inputContainer}>
-          <Controller control={control}
-            render={({ field: { onChange, onBlur, value, } }) => (
-              <TextInput
-                label={"Nome"}
-                mode="outlined"
-                autoFocus
-                activeOutlineColor={colorPrimary}
-                error={!!errors.name}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
+          <View style={styles.inputContainer}>
+            <Controller control={control}
+              render={({ field: { onChange, onBlur, value, } }) => (
+                <TextInput
+                  label={"Nome"}
+                  mode="outlined"
+                  autoFocus
+                  activeOutlineColor={colorPrimary}
+                  error={!!errors.name}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
 
-            name="name"
-          />
+              name="name"
+            />
 
-          <ErrorMessage name={"name"} errors={errors} />
-          <Controller control={control}
-            render={({ field: { onChange, onBlur, value, } }) => (
-              <TextInput
-                label={"login"}
-                mode="outlined"
-                activeOutlineColor={colorPrimary}
-                error={!!errors.login}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-              />
-            )}
+            <ErrorMessage name={"name"} errors={errors} />
+            <Controller control={control}
+              render={({ field: { onChange, onBlur, value, } }) => (
+                <TextInput
+                  label={"login"}
+                  mode="outlined"
+                  activeOutlineColor={colorPrimary}
+                  error={!!errors.login}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
 
-            name="login"
-          />
-          <ErrorMessage name={"login"} errors={errors} />
+              name="login"
+            />
+            <ErrorMessage name={"login"} errors={errors} />
 
-          <Controller control={control} rules={
-            {
-              required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
-              minLength: { value: 5, message: "Informe uma senha maior" },
-            }}
-            render={({ field: { onChange, onBlur, value, } }) => (
-              <TextInput
-                label={"Senha"}
-                mode="outlined"
-                activeOutlineColor={colorPrimary}
-                error={!!errors.password}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-            )}
-            name="password"
-          />
-          <ErrorMessage name={"password"} errors={errors} />
+            <Controller control={control} rules={
+              {
+                required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
+                minLength: { value: 5, message: "Informe uma senha maior" },
+              }}
+              render={({ field: { onChange, onBlur, value, } }) => (
+                <TextInput
+                  label={"Senha"}
+                  mode="outlined"
+                  activeOutlineColor={colorPrimary}
+                  error={!!errors.password}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              )}
+              name="password"
+            />
+            <ErrorMessage name={"password"} errors={errors} />
 
 
-          <Controller control={control} rules={
-            {
-              required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
-              minLength: { value: 5, message: "Informe uma senha maior" },
-            }}
-            render={({ field: { onChange, onBlur, value, } }) => (
-              <TextInput
-                label={"Confirmar senha"}
-                mode="outlined"
-                activeOutlineColor={colorPrimary}
-                error={!!errors.password_confirmation}
-                onBlur={onBlur}
-                onChangeText={onChange}
-                value={value}
-                secureTextEntry
-              />
-            )}
-            name="password_confirmation"
-          />
-          <ErrorMessage name={"password_confirmation"} errors={errors} />
+            <Controller control={control} rules={
+              {
+                required: 'Obrigatório', maxLength: { value: 40, message: "Nome muito grande" },
+                minLength: { value: 5, message: "Informe uma senha maior" },
+              }}
+              render={({ field: { onChange, onBlur, value, } }) => (
+                <TextInput
+                  label={"Confirmar senha"}
+                  mode="outlined"
+                  activeOutlineColor={colorPrimary}
+                  error={!!errors.password_confirmation}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  secureTextEntry
+                />
+              )}
+              name="password_confirmation"
+            />
+            <ErrorMessage name={"password_confirmation"} errors={errors} />
 
-          <Button
-            disabled={loading}
-            loading={loading}
-            buttonColor={colorPrimary}
-            textColor='white'
-            style={styles.button}
-            onPress={handleSubmit(onSubmit)}>
-            Criar conta
-          </Button>
+            <Button
+              disabled={loading}
+              loading={loading}
+              buttonColor={colorPrimary}
+              textColor='white'
+              style={styles.button}
+              onPress={handleSubmit(onSubmit)}>
+              Criar conta
+            </Button>
 
-          <View style={styles.footerContainer}>
-            <Text style={styles.footerText}>Já tem uma conta?</Text>
-            <Pressable onPress={() => navigation.navigate("SigIn")}>
-              <Text style={styles.linkText}>Fazer login</Text>
-            </Pressable>
+            <View style={styles.footerContainer}>
+              <Text style={styles.footerText}>Já tem uma conta?</Text>
+              <Pressable onPress={() => navigation.navigate("SigIn")}>
+                <Text style={styles.linkText}>Fazer login</Text>
+              </Pressable>
+            </View>
+
+            <View>
+
+            </View>
           </View>
 
-          <View>
-
-          </View>
         </View>
 
-      </View>
-
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  containerScrow: {
   },
   contentContainer: {
     marginTop: 26,

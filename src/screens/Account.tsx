@@ -1,18 +1,21 @@
-import { View, Text, Image, StyleSheet, Pressable, Dimensions, Alert } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
-import { useContext, useState } from 'react';
+import { View, Text, Image, StyleSheet, Pressable, Dimensions, Alert, ToastAndroid } from 'react-native';
+import { Avatar, Button, TextInput } from 'react-native-paper';
+import { useContext, useState, useEffect } from 'react';
 import { ContextSheet } from '../context/BottomSheetContex';
 import BottomSheet from '../components/BottomSheet';
 import { AuthContext } from '../context/AuthContext';
 import { api } from '../config/Api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import uniqolor from 'uniqolor';
 
 export default function Account() {
-  const [name, setName] = useState('Simone Biles');
-  const [username, setUsername] = useState('@simonebiles');
-  const [bio, setBio] = useState('Desenvolvedora de sistemas | Apaixonada por tecnologia e inovação 🚀');
   const { closeBottomSheet, openBottomSheet } = useContext(ContextSheet);
   const { height, width } = Dimensions.get('window');
-  const { logout } = useContext(AuthContext);
+  const { logout, user, setUser } = useContext(AuthContext);
+
+  const [name, setName] = useState(user?.name || '');
+  const [username, setUsername] = useState(user?.user_login || '');
+  const [password, setPassword] = useState(user?.password || '');
 
   const handleOpenSheet = () => {
     openBottomSheet('Account');
@@ -20,7 +23,7 @@ export default function Account() {
 
   const deleteAccount = async () => {
     try {
-     // await api.delete(`/users/1`); // Substitua '1' pelo ID do usuário atual
+      await api.delete(`/users/${user?.id}`);
       Alert.alert("Conta", "Conta deletada com sucesso");
       logout();
     } catch (error) {
@@ -29,18 +32,39 @@ export default function Account() {
     }
   };
 
+  const updateUser = async () => {
+    try {
+      const response = await api.patch(`/users/${user?.id}`, {
+        user: {
+          login: username,
+          name: name,
+        }
+      });
+      console.log(response.data)
+      setTimeout(() => {
+        ToastAndroid.show("Conta atualizada com sucesso", 3000)
+      }, 1000);
+      setUser(response.data)
+      await AsyncStorage.setItem("user", JSON.stringify(response.data))
+      closeBottomSheet();
+    } catch (error) {
+      console.log(error);
+      alert("Erro ao atualizar conta");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
-          source={{ uri: 'https://img.myloview.com.br/posters/modelo-loira-sensual-mulher-loura-bonita-atrativa-sexy-apaixonado-com-cabelo-longo-saudavel-composicao-perfeita-pestanas-longas-grossas-dentes-brancos-conceito-de-cosmetico-beleza-skincare-e-700-126762601.jpg' }}
-          style={styles.profileImage}
+        <Avatar.Text
+          color='white'
+          style={{ backgroundColor: uniqolor.random().color }}
+          size={80}
+          label={user?.name ? user?.name[0] : ""}
         />
-        <Text style={styles.name}>Simone Biles</Text>
-        <Text style={styles.username}>@simonebiles</Text>
-        <Text style={styles.bio}>
-          Desenvolvedora de sistemas | Apaixonada por tecnologia e inovação 🚀
-        </Text>
+        <Text style={styles.name}>{user?.name}</Text>
+        <Text style={styles.username}>@{user?.login}</Text>
+
       </View>
 
       <View style={styles.stats}>
@@ -81,18 +105,16 @@ export default function Account() {
             style={styles.input}
           />
           <TextInput
-            label="Bio"
-            value={bio}
-            onChangeText={setBio}
+            label="Senha"
+            value={password}
+            onChangeText={setPassword}
             mode="outlined"
             style={styles.input}
+            secureTextEntry
           />
           <Button
             mode="contained"
-            onPress={() => {
-              Alert.alert("Perfil", "Perfil atualizado");
-              closeBottomSheet();
-            }}
+            onPress={updateUser}
             style={styles.saveButton}
             labelStyle={styles.saveButtonText}
           >

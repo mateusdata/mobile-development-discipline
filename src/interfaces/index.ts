@@ -13,17 +13,22 @@ export interface FormatAuthContext {
 export interface FormatUser {
     name?: string,
     email?: string,
-    login?: string,
+    user_login?: string,
     token?: string
     password?: string
-    userId?: number
+    id?: number
+    user_id?: number
+    login?:string
     user?: {
         name?: string,
         email?: string,
-        login?: string,
+        user_login?: string,
         token?: string
         password?: string
-        userId?: number
+        user_id?: number
+        login?:string
+
+        
     }
 }
 
