@@ -36,10 +36,10 @@ const SignIn = ({ navigation }: any) => {
 
     const { watch, handleSubmit, setError, trigger, control, formState: { errors }, setValue } = useForm({
         defaultValues: {
-            login: "mateu",
-            password: "123456"
+            login: "",
+            password: ""
         },
-        mode: "onBlur",
+        mode: "onSubmit",
         resolver: yupResolver(schema)
     });
 

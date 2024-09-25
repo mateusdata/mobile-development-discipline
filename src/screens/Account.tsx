@@ -21,10 +21,36 @@ export default function Account() {
     openBottomSheet('Account');
   };
 
+
+
+
+  const handleDelete = async () => {
+    Alert.alert('Excluir Conta', 'Poxa 😞, Estamos tristes por você estar saindo do Papacapim. Tem certeza de que deseja excluir sua conta?', [
+      {
+        text: 'Pergunte-me depois',
+        onPress: () => console.log('Pergunte-me depois pressionado'),
+      },
+      {
+        text: 'Cancelar',
+        onPress: () => console.log('Cancelado'),
+        style: 'cancel',
+      },
+      {
+        text: 'Excluir conta',
+        onPress: async () => {
+         await deleteAccount()
+        },
+      },
+    ]);
+  }
+
+
+
   const deleteAccount = async () => {
+    
     try {
       await api.delete(`/users/${user?.id}`);
-      Alert.alert("Conta", "Conta deletada com sucesso");
+     
       logout();
     } catch (error) {
       console.log(error);
@@ -89,7 +115,7 @@ export default function Account() {
         <Text style={styles.editProfileButtonText}>Sair</Text>
       </Pressable>
 
-      <Pressable onPress={deleteAccount} style={[styles.editProfileButton, { backgroundColor: "#f46464", marginTop: 10 }]}>
+      <Pressable onPress={handleDelete} style={[styles.editProfileButton, { backgroundColor: "#f46464", marginTop: 10 }]}>
         <Text style={styles.editProfileButtonText}>Deletar Conta</Text>
       </Pressable>
 

@@ -85,7 +85,7 @@ export default function SearchUsers({navigation}:any) {
                   <Avatar.Text
                     color='white'
                     style={{ backgroundColor: uniqolor.random().color }}
-                    size={30}
+                    size={35}
                     label={item.name[0]?.toUpperCase()}
                   />
                   <View>
