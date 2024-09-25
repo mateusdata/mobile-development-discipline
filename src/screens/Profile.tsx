@@ -1,22 +1,107 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Share } from 'react-native';
+import { Avatar } from 'react-native-paper';
+import uniqolor from 'uniqolor';
+import { api } from '../config/Api';
+import { AuthContext } from '../context/AuthContext';
+import LoadingComponent from '../components/LoadingComponent';
+import { playSound } from '../utils/playSound';
 
-export default function Profile() {
-  const userUrl = "https://media.istockphoto.com/id/1490373886/pt/foto/natural-beauty.webp?b=1&s=170667a&w=0&k=20&c=JZOyXoFl8iPMqtOySv82u4miOI5NIJGLxryugT12VSg="
+interface FormarProfile {
+  login: string
+  name: string
 
+}
+
+interface Follow {
+  follower_id: number;
+  followed_id: number;
+  created_at?: string;
+  updated_at?: string;
+  follower_login?: string;
+  followed_login?: string;
+}
+
+export default function Profile({ route }: { route: { params: { profile: FormarProfile } } }) {
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [followers, setFollowers] = useState('')
+  const { user } = useContext(AuthContext)
+  const { profile } = route?.params
+
+  async function fetchData() {
+    try {
+      const response = await api.get(`users/${profile?.login}/followers`)
+      console.log("Meus sequidores");
+      const isMatch = response?.data?.find((item: Follow) => (item.follower_login === user?.user_login))
+      console.log("Já seque", isMatch);
+      if (isMatch) {
+        setFollowers(isMatch.follower_id)
+        setIsFollowing(true)
+      }
+      console.log(response.data)
+      setLoading(false)
+    } catch (error) {
+      console.log("OCoreu um error");
+      console.log(error);
+      setLoading(false)
+
+    }
+  }
+  useEffect(() => {
+    fetchData()
+  }, []);
+
+  async function followersUser() {
+    try {
+      if (isFollowing) {
+        const deseguir = await api.delete(`users/${profile.login}/followers/${followers}`);
+        playSound()
+        setIsFollowing(false);
+        return
+      }
+      const seguir = await api.post(`users/${profile?.login}/followers`);
+      setIsFollowing(true)
+      playSound()
+    } catch (error: any) {
+
+      if (error?.response?.status === 422) {
+        api.delete(`users/${profile.login}/followers/${followers}`)
+        return alert("Ops? muitas tentativas, sai da pagina e tente novamente")
+      }
+      setIsFollowing(false)
+    }
+  }
+  async function sharePost() {
+    try {
+      await Share.share({
+        title: `Olá estou compartilhando um post de ${profile?.login}`,
+        message: `Olá estou capartilhaddo este perfil do papacapim @${profile?.login}`,
+      });
+    } catch (error) {
+
+    }
+  }
+
+  if (loading) {
+    return <LoadingComponent />
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
-          source={{ uri: userUrl }}
-          style={styles.profileImage}
+        <Avatar.Text
+          color='white'
+          style={{ backgroundColor: uniqolor.random().color }}
+          size={80}
+          label={profile?.name ? profile?.name[0]?.toUpperCase() : profile?.login[0]?.toUpperCase()}
         />
-        <Text style={styles.name}>Leila carla</Text>
-        <Text style={styles.username}>@username</Text>
+        <Text style={styles.name}>{profile?.name} </Text>
+        <Text style={styles.username}>{"@" + profile?.login}</Text>
       </View>
+
       <View style={styles.stats}>
         <View style={styles.stat}>
-          <Text style={styles.statNumber}>123</Text>
+          <Text style={styles.statNumber}>123  </Text>
           <Text>Postagens</Text>
         </View>
         <View style={styles.stat}>
@@ -29,11 +114,11 @@ export default function Profile() {
         </View>
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.followButton}>
-          <Text style={styles.buttonText}>Seguir</Text>
+        <TouchableOpacity onPress={followersUser} style={[styles.followButton, { backgroundColor: isFollowing ? "black" : "gray" }]}>
+          <Text style={styles.buttonText}>{`${isFollowing ? "Seguindo" : "Seguir"}`}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.mentionButton}>
-          <Text style={styles.buttonText}>Mencionar</Text>
+        <TouchableOpacity onPress={sharePost} style={styles.mentionButton}>
+          <Text style={styles.buttonText}>Compartilhar</Text>
         </TouchableOpacity>
       </View>
     </View>

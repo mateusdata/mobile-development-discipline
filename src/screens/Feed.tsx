@@ -59,7 +59,7 @@ const FeedScreen = ({ navigation }: any) => {
 
       }
 
-    },5000);
+    }, 5000);
   }, []);
 
   async function fetchData() {
@@ -129,7 +129,12 @@ const FeedScreen = ({ navigation }: any) => {
   const renderPost = ({ item, index }: { item: FormatPost, index: any }) => (
     <View key={index} style={styles.postContainer}>
       <View style={{ width: "90%", flexDirection: "row" }}>
-        <Pressable onPress={() => navigation.navigate("Profile")} style={styles.containerAvatar}>
+        <Pressable onPress={() => navigation.navigate("Profile", {
+          profile: {
+            login: item.user_login,
+            name: item.user_login
+          }
+        })} style={styles.containerAvatar}>
 
           <Avatar.Text
             color='white' style={{ backgroundColor: generationColor(item.id) }}
@@ -143,7 +148,12 @@ const FeedScreen = ({ navigation }: any) => {
 
           <View style={styles.containerUserTitle}>
             <View style={{ flexDirection: "row", gap: 4, justifyContent: 'center', alignItems: "center" }}>
-              <Pressable onPress={() => navigation.navigate("Profile")}>
+              <Pressable onPress={() => navigation.navigate("Profile", {
+                profile: {
+                  login: "mateus",
+                  name: "mateus"
+                }
+              })}>
                 <Text numberOfLines={50000} ellipsizeMode="tail" style={styles.postUser}>{item.user_login}</Text>
               </Pressable>
               <Text numberOfLines={50000} ellipsizeMode="tail" style={[styles.postUser, { fontWeight: 100, fontSize: 12 }]}>
@@ -226,12 +236,12 @@ const FeedScreen = ({ navigation }: any) => {
         </BottomSheet>
 
         {showConfetti && (
-        <ConfettiCannon
-          count={200}
-          origin={{ x: width / 2, y: height / 2 }}
-          fadeOut={true}
-        />
-      )}
+          <ConfettiCannon
+            count={200}
+            origin={{ x: width / 2, y: height / 2 }}
+            fadeOut={true}
+          />
+        )}
 
       </View>
     </SafeAreaProvider>

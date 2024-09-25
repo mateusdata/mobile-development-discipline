@@ -6,7 +6,7 @@ import { FormatUser } from '../interfaces';
 import uniqolor from 'uniqolor';
 import LoadingComponent from '../components/LoadingComponent';
 
-export default function SearchUsers() {
+export default function SearchUsers({navigation}:any) {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<FormatUser[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,7 +64,7 @@ export default function SearchUsers() {
     <View style={styles.container}>
       <View style={styles.searchContainer}>
         <Searchbar
-          placeholder="Pesquisar pacientes"
+          placeholder="Pesquisar perfil"
           onChangeText={onChangeSearch}
           value={searchQuery}
           mode='bar'
@@ -80,7 +80,7 @@ export default function SearchUsers() {
         !loading ?
           <ScrollView contentContainerStyle={styles.scrollView}>
             {users.map((item: any) => (
-              <View key={item.login} style={styles.userContainer}>
+              <Pressable onPress={()=> navigation.navigate("Profile", {profile: item})} android_ripple={{color:"gray"}} key={item.login} style={styles.userContainer}>
                 <View style={{ flexDirection: "row", gap: 15, justifyContent: "center", alignItems: "center" }}>
                   <Avatar.Text
                     color='white'
@@ -94,12 +94,12 @@ export default function SearchUsers() {
                   </View>
                 </View>
 
-                <View style={{ justifyContent: "center" }}>
+                {false && <View style={{ justifyContent: "center" }}>
                   <Pressable onPress={() => followersUser(item)} android_ripple={{ color: "white" }} style={{ backgroundColor: "black", padding: 5, borderRadius: 7, paddingHorizontal: 20 }}>
                     <Text style={{ color: "white" }}>Seguir</Text>
                   </Pressable>
-                </View>
-              </View>
+                </View>}
+              </Pressable>
             ))}
           </ScrollView> :
           <LoadingComponent />

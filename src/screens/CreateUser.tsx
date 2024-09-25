@@ -232,7 +232,7 @@ const CreateUser = ({ navigation }: any) => {
             <View style={styles.footerContainer}>
               <Text style={styles.footerText}>Já tem uma conta?</Text>
               <Pressable onPress={() => navigation.navigate("SigIn")}>
-                <Text style={styles.linkText}>Fazer login</Text>
+                <Text style={styles.linkText}>Fazer login {JSON.stringify(watch(), null, 2)}</Text>
               </Pressable>
             </View>
 

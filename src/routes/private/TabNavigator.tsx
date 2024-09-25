@@ -57,6 +57,7 @@ export default function TabNavigator() {
           headerStyle:{
             backgroundColor:"white"
           }, 
+          headerTitle:"Pesquisar perfil"
          
           }} />
 
