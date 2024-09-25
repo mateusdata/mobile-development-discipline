@@ -13,7 +13,7 @@ Bem-vindo ao **Papa Campim**, um projeto open-source de rede social construído 
 ## 🎇 Pré-requisitos:
 - Node.js
 - npm ou yarn
-- React Native CLI configurado
+- React Native expo configurado
 - Emulador Android ou iOS
 - 
 ## 🎆 Instalação:
@@ -21,6 +21,5 @@ Bem-vindo ao **Papa Campim**, um projeto open-source de rede social construído 
 1. Clone o repositório:
    ```bash
    git clone https://github.com/mateusdata/papacapim.git
-
-![2](https://github.com/user-attachments/assets/d2f6e814-0c23-42ba-8893-b8496efded83)
+   
 ![1](https://github.com/user-attachments/assets/54d3aa89-d63b-42a1-8aac-f942b5a08717)
