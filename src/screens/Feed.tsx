@@ -146,6 +146,11 @@ const FeedScreen = ({ navigation }: any) => {
     </View>
   );
 
+  const renderFooter = () => {
+    return <LoadingComponent/>;
+  };
+
+
   const handleLoadMore = () => {
     setPage(prevPage => prevPage + 1);
   };
@@ -180,6 +185,8 @@ const FeedScreen = ({ navigation }: any) => {
           onEndReachedThreshold={0.5}
           refreshing={isRefreshing}
           onRefresh={handleRefresh}
+          ListFooterComponent={renderFooter}
+
         />
         <BottomSheet id="FeedScreenWelcome" snapPoints={[height < 700 ? 45 : 35]}>
           <View style={{ padding: 20, alignItems: 'center' }}>
