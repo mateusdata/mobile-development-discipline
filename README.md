@@ -21,5 +21,16 @@ Bem-vindo ao **Papa Campim**, um projeto open-source de rede social construído 
 1. Clone o repositório:
    ```bash
    git clone https://github.com/mateusdata/papacapim.git
-   
+2. Build local 
+   time eas build --local --platform android --profile preview 
+
+3. build remoto   
+   eas build -p android --profile preview 
+
+4. Obs: para fazer build  com sua conta remova a linha 
+     "extra": {
+      "eas": {
+        "projectId": "meuidaqui"
+      }
+    }
 ![1](https://github.com/user-attachments/assets/54d3aa89-d63b-42a1-8aac-f942b5a08717)
