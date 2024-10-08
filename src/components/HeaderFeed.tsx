@@ -7,7 +7,7 @@ import logo from '../../assets/splash.png';
 export default function HeaderFeed() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Papacampi</Text>
+      <Text style={styles.title}>Papacapim</Text>
       <Image source={logo} style={styles.logo} />
 
     </View>

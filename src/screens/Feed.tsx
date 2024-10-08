@@ -27,7 +27,7 @@ const FeedScreen = ({ navigation }: any) => {
   const [currentPost, setCurrentPost] = useState<FormatPost>({} as FormatPost);
   const [showConfetti, setShowConfetti] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
   useEffect(() => {
